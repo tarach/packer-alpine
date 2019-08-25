@@ -1,14 +1,29 @@
-KEYMAPOPTS="us us"
-HOSTNAMEOPTS="-n localhost"
-INTERFACESOPTS="auto lo
+KEYMAPOPTS="pl pl"
+HOSTNAMEOPTS="-n alpine-hostname"
+INTERFACESOPTS="
+auto lo
 iface lo inet loopback
 
 auto eth0
 iface eth0 inet dhcp
+
+auto eth1
+iface eth1 inet static
+    address x.x.x.x
+    netmask x.x.x.x
 "
-TIMEZONEOPTS="-z UTC"
+TIMEZONEOPTS="-z Europe/Warsaw"
 PROXYOPTS="none"
-APKREPOSOPTS="-r"
+
+# https://mirrors.alpinelinux.org
+#APKREPOSOPTS="
+#https://ftp.icm.edu.pl/pub/Linux/distributions/alpine/v3.10/main
+#https://ftp.icm.edu.pl/pub/Linux/distributions/alpine/v3.10/community
+#"
+APKREPOSOPTS="-1"
+
 SSHDOPTS="-c openssh"
 NTPOPTS="-c openntpd"
 DISKOPTS="-m sys /dev/sda"
+LBUOPTS="/media/sdb1"
+APKCACHEOPTS="/media/sdb1/cache"

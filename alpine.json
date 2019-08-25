@@ -11,7 +11,9 @@
     "iso_checksum_type": "sha256",
     "root_password": "packer",
     "ssh_username": "packer",
-    "ssh_password": "packer"
+    "ssh_password": "packer",
+    "ip_address": "192.168.56.10",
+    "ip_netmask": "255.255.255.0"
   },
   "provisioners": [
   ],
@@ -36,37 +38,42 @@
       "ssh_password": "{{user `ssh_password`}}",
       "ssh_wait_timeout": "10m",
       "shutdown_command": "echo {{user `ssh_password`}} | sudo -S /sbin/poweroff",
-      "boot_wait": "30s",
+      "boot_wait": "15s",
       "boot_command": [
         "root<enter><wait>",
         "ifconfig eth0 up && udhcpc -i eth0<enter><wait10>",
         "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/answers<enter><wait>",
         "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/install.sh<enter><wait>",
-        "setup-alpine -f $PWD/answers<enter><wait5>",
+        "chmod +x install.sh<enter><wait>",
+        "./install.sh {{user `ip_address`}} {{user `ip_netmask`}}<enter><wait>",
+        "{{user `ssh_username`}}<enter><wait>",
+        "{{user `ssh_password`}}<enter><wait>",
+        "<wait10>",
+        "apk add haveged<enter><wait5>",
+        "rc-update add haveged<enter><wait>",
+        "rc-service haveged start<enter><wait>",
+        "setup-alpine -f $PWD/answers<enter>",
+        "<wait10>",
         "{{user `root_password`}}<enter><wait>",
         "{{user `root_password`}}<enter><wait>",
-        "<wait10><wait10>",
-        "<wait10><wait10>",
+        "<wait30>",
         "y<enter>",
-        "<wait10><wait10>",
-        "<wait10><wait10>",
-        "<wait10><wait10>",
-        "<wait10><wait10>",
+        "<wait60>",
         "reboot<enter>",
-        "<wait10><wait10>",
-        "<wait10><wait10>",
-        "<wait10><wait10>",
-        "<wait10><wait10>",
-        "<wait10><wait10>",
-        "root<enter>",
+        "<wait20>",
+        "root<enter><wait>",
         "{{user `root_password`}}<enter>",
-        "apk add sudo<enter><wait5>",
-        "echo 'Defaults env_keep += \"http_proxy https_proxy\"' > /etc/sudoers.d/wheel<enter>",
-        "echo '%wheel ALL=(ALL) ALL' >> /etc/sudoers.d/wheel<enter>",
-        "adduser {{user `ssh_username`}}<enter>",
-        "{{user `ssh_password`}}<enter>",
-        "{{user `ssh_password`}}<enter>",
-        "adduser {{user `ssh_username`}} wheel<enter>"
+        "<wait5>",
+        "adduser {{user `ssh_username`}}<enter><wait>",
+        "{{user `ssh_password`}}<enter><wait>",
+        "{{user `ssh_password`}}<enter><wait>",
+        "echo 'Defaults env_keep += \"http_proxy https_proxy\"' > /etc/sudoers.d/wheel<enter><wait>",
+        "echo '%wheel ALL=(ALL) ALL' >> /etc/sudoers.d/wheel<enter><wait>",
+        "adduser {{user `ssh_username`}} wheel<enter><wait>",
+        "reboot<enter>",
+        "<wait20>",
+        "root<enter><wait>",
+        "{{user `root_password`}}<enter>"
       ],
       "hard_drive_interface": "sata",
       "vboxmanage": [
@@ -101,6 +108,24 @@
           "hostonly",
           "--hostonlyadapter2",
           "VirtualBox Host-Only Ethernet Adapter"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--vram",
+          "16"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--nested-hw-virt",
+          "on"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "2"
         ]
       ]
     }

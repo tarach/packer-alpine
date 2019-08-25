@@ -1,16 +1,13 @@
 #!/usr/bin/env sh
 
-setup-alpine -f $PWD/answers
-{{user `root_password`}}
-{{user `root_password`}}
-y<enter>
-reboot
-root
-{{user `root_password`}}
-apk add sudo
-echo 'Defaults env_keep += \"http_proxy https_proxy\"' > /etc/sudoers.d/wheel
-echo '%wheel ALL=(ALL) ALL' >> /etc/sudoers.d/wheel
-adduser {{user `ssh_username`}}
-{{user `ssh_password`}}
-{{user `ssh_password`}}
-adduser {{user `ssh_username`}} wheel
+IFS= read -rs USER < /dev/tty
+IFS= read -rs PASS < /dev/tty
+
+IP=$1
+MASK=$2
+
+setup-apkrepos -1
+apk add sudo openntpd
+
+sed -i "s/address x.x.x.x/address $IP/" answers
+sed -i "s/netmask x.x.x.x/netmask $MASK/" answers
