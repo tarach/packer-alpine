@@ -1,6 +1,6 @@
 # Packer Alpine v3.10.1
 
-![Packer Alpine Build execution](/packer-alpine?raw=true "Packer Alpine Build Execution")
+![Packer Alpine Build execution](https://raw.githubusercontent.com/tarach/packer-alpine/master/packer-alpine.jpg)
 
 ## How to build
 * ```git clone https://github.com/tarach/packer-alpine.git```
