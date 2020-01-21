@@ -73,7 +73,8 @@
         "reboot<enter>",
         "<wait20>",
         "root<enter><wait>",
-        "{{user `root_password`}}<enter>"
+        "{{user `root_password`}}<enter><wait>",
+        "echo '' > /etc/motd<enter><wait>"
       ],
       "hard_drive_interface": "sata",
       "vboxmanage": [

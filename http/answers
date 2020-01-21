@@ -20,7 +20,10 @@ PROXYOPTS="none"
 #https://ftp.icm.edu.pl/pub/Linux/distributions/alpine/v3.10/main
 #https://ftp.icm.edu.pl/pub/Linux/distributions/alpine/v3.10/community
 #"
-APKREPOSOPTS="-1"
+APKREPOSOPTS="
+https://alpine.global.ssl.fastly.net/alpine/v3.10/main
+https://alpine.global.ssl.fastly.net/alpine/v3.10/community
+"
 
 SSHDOPTS="-c openssh"
 NTPOPTS="-c openntpd"
